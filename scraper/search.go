@@ -39,6 +39,12 @@ func getSearch(searchQuery string) Images {
 
 	c.Visit("https://unsplash.com/s/" + searchString)
 	c.Visit("https://www.freeimages.com/search/" + searchString)
+	c.Visit("https://burst.shopify.com/photos/search?utf8=%E2%9C%93&q=" + searchString + "&button=")
+	pexelsQuery := strings.Replace(searchString, "-", "%20", -1)
+	c.Visit("https://www.pexels.com/search/" + pexelsQuery + "/")
+	stocSnapQuery := strings.Replace(searchString, "-", "+", -1)
+	c.Visit("https://stocksnap.io/search/" + stocSnapQuery)
+
 	return Images{
 		Count: len(array),
 		Data:  array}
