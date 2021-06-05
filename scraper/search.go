@@ -11,6 +11,8 @@ import (
 
 func GetImgs(c *gin.Context) {
 	searchQuery := c.Query("q")
+	fmt.Print("the search string is")
+	fmt.Print(c.Query("q"))
 	res := getSearch(searchQuery)
 	c.JSON(http.StatusOK, res)
 }
@@ -18,7 +20,9 @@ func GetImgs(c *gin.Context) {
 func getSearch(searchQuery string) Images {
 	searchString := strings.Replace(searchQuery, " ", "-", -1)
 	c := colly.NewCollector()
-
+	c.UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0"
+	c.AllowURLRevisit = true
+	c.DisableCookies()
 	array := []string{}
 
 	// Find and visit all links
