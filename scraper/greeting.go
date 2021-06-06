@@ -7,9 +7,6 @@ import (
 )
 
 func Greet(c *gin.Context) {
-
-	res := make(map[string]string)
-	res["sup"] = "🤘🚀"
-	c.JSON(http.StatusOK, res)
+	c.JSON(http.StatusOK, map[string]string{"sup": "🤘🚀"})
 
 }

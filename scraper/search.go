@@ -3,6 +3,7 @@ package scraper
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -33,6 +34,7 @@ func getSearch(searchQuery string) Images {
 	c.OnRequest(func(r *colly.Request) {
 		fmt.Println("Visiting", r.URL)
 	})
+	fmt.Print(os.Getenv("AUTHORIZATION_STRING"))
 	c.Visit("https://unsplash.com/s/" + searchString)
 	c.Visit("https://burst.shopify.com/photos/search?utf8=%E2%9C%93&q=" + searchString + "&button=")
 	pexelsQuery := strings.Replace(searchString, "-", "%20", -1)
