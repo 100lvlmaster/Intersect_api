@@ -5,7 +5,7 @@ import "github.com/getsentry/sentry-go"
 // Init : Initialize the routes and server
 func Init() {
 	r := NewRouter()
-	err := r.Run(":8080")
+	err := r.Run()
 
 	if err != nil {
 		sentry.CaptureException(err)

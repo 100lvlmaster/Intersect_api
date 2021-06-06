@@ -3,7 +3,6 @@ package scraper
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -31,18 +30,21 @@ func getSearch(searchQuery string) Images {
 			array = append(array, e.Attr("src"))
 		}
 	})
+	// Requesting a url for html
 	c.OnRequest(func(r *colly.Request) {
 		fmt.Println("Visiting", r.URL)
 	})
-	fmt.Print(os.Getenv("AUTHORIZATION_STRING"))
+	// search query
+	pexelsQuery := strings.Replace(searchString, "-", "%20", -1)
+	stocSnapQuery := strings.Replace(searchString, "-", "+", -1)
+	//
 	c.Visit("https://unsplash.com/s/" + searchString)
 	c.Visit("https://burst.shopify.com/photos/search?utf8=%E2%9C%93&q=" + searchString + "&button=")
-	pexelsQuery := strings.Replace(searchString, "-", "%20", -1)
 	c.Visit("https://www.pexels.com/search/" + pexelsQuery + "/")
 	c.Visit("https://www.flickr.com/search/?text=" + pexelsQuery)
-	stocSnapQuery := strings.Replace(searchString, "-", "+", -1)
 	c.Visit("http://www.google.com/images?q=" + stocSnapQuery)
 	c.Visit("https://stocksnap.io/search/" + stocSnapQuery)
+	//
 	return Images{
 		Count: len(array),
 		Data:  array}
