@@ -1,22 +1,23 @@
-FROM golang
-WORKDIR /go/src/github.com/100lvlmaster/app
+# Build Stage
+FROM golang:alpine as build
+
+WORKDIR /src/Intersect_api
+
+COPY go.mod .
+COPY go.sum .
+
+RUN go mod download
+
 COPY . .
 
-ADD https://github.com/upx/upx/releases/download/v3.95/upx-3.95-amd64_linux.tar.xz /usr/local
-RUN set -x && \
-    apt update && \
-    apt install -y xz-utils && \
-    xz -d -c /usr/local/upx-3.95-amd64_linux.tar.xz | \
-    tar -xOf - upx-3.95-amd64_linux/upx > /bin/upx && \
-    chmod a+x /bin/upx && \
-    go get -d -v . && \
-    CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app . && \
-    strip --strip-unneeded app && \
-    upx app
+RUN go build -o /app/Intersect_api
 
-FROM scratch
-WORKDIR /root/
-COPY --from=0 /go/src/github.com/100lvlmaster/app .
-COPY --from=0 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+# Final Stage
+FROM alpine:latest
+WORKDIR /app
+COPY --from=build /app/Intersect_api /app/
+
 EXPOSE 8080
-CMD ["./app"]
+
+CMD ./Intersect_api
+
