@@ -22,4 +22,3 @@ COPY --from=build /app/Intersect_api /app/
 EXPOSE 8080
 
 CMD ./Intersect_api
-
