@@ -30,7 +30,7 @@ func NewRouter() *gin.Engine {
 // Cors
 func setCors() gin.HandlerFunc {
 	return cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
+		AllowOrigins:     []string{"*", "https://the-intersect.vercel.app"},
 		AllowMethods:     []string{"GET"},
 		AllowHeaders:     []string{"Origin", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
