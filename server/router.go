@@ -11,11 +11,11 @@ import (
 func NewRouter() *gin.Engine {
 	// gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
-
 	// Gin and CORS Middlewares
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
-	router.Use(cors.Default())
+	/// Cors
+	router.Use(setCors())
 	/// Declare Middleware
 	authorized := router.Group("/")
 	authorized.Use(AuthMiddleware())
@@ -24,10 +24,16 @@ func NewRouter() *gin.Engine {
 		searchRouter := authorized.Group("search")
 		searchRouter.GET("", scraper.GetImgs)
 	}
-	// per group middleware! in this case we use the custom created
-	// AuthRequired() middleware just in the "authorized" group.
-
-	// /gimme routes
-
 	return router
+}
+
+// Cors
+func setCors() gin.HandlerFunc {
+	return cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET"},
+		AllowHeaders:     []string{"Origin", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	})
 }
