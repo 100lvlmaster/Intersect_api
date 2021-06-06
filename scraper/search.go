@@ -11,8 +11,6 @@ import (
 
 func GetImgs(c *gin.Context) {
 	searchQuery := c.Query("q")
-	fmt.Print("the search string is")
-	fmt.Print(c.Query("q"))
 	res := getSearch(searchQuery)
 	c.JSON(http.StatusOK, res)
 }
@@ -32,19 +30,17 @@ func getSearch(searchQuery string) Images {
 			array = append(array, e.Attr("src"))
 		}
 	})
-
 	c.OnRequest(func(r *colly.Request) {
 		fmt.Println("Visiting", r.URL)
 	})
-
 	c.Visit("https://unsplash.com/s/" + searchString)
-	c.Visit("https://www.freeimages.com/search/" + searchString)
 	c.Visit("https://burst.shopify.com/photos/search?utf8=%E2%9C%93&q=" + searchString + "&button=")
 	pexelsQuery := strings.Replace(searchString, "-", "%20", -1)
 	c.Visit("https://www.pexels.com/search/" + pexelsQuery + "/")
+	c.Visit("https://www.flickr.com/search/?text=" + pexelsQuery)
 	stocSnapQuery := strings.Replace(searchString, "-", "+", -1)
+	c.Visit("http://www.google.com/images?q=" + stocSnapQuery)
 	c.Visit("https://stocksnap.io/search/" + stocSnapQuery)
-
 	return Images{
 		Count: len(array),
 		Data:  array}
