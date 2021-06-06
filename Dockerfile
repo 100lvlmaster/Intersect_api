@@ -14,7 +14,9 @@ RUN go build -o /app/Intersect_api
 
 # Final Stage
 FROM alpine:latest
+
 WORKDIR /app
+
 COPY --from=build /app/Intersect_api /app/
 
 EXPOSE 8080
